@@ -34,6 +34,17 @@ func WithInit(f InitFunc) Option {
 	}
 }
 
+// WithPostCreate lets the provided PostCreateFunc make changes to the container
+// instance after it is created but before it is initialized or healthchecked.
+// Use this function to make any changes to the container instance before it is used.
+// (e.g: Set the Host to a DNS value so that the container can be accessed in a DinD or
+// container peer environment)
+func WithPostCreate(f PostCreateFunc) Option {
+	return func(o *Options) {
+		o.postCreate = f
+	}
+}
+
 // WithHealthCheck allows to define a rule to consider a Gnomock container
 // ready to use. For example, it can attempt to connect to this container, and
 // return an error on any failure, or nil on success. This function is called
@@ -241,6 +252,15 @@ func nopInit(context.Context, *Container) error {
 	return nil
 }
 
+// PostCreateFunc defines a function to be called after the container is created
+// but before it is initialized or healthchecked. Use this to make any changes to the
+// container instance before it is used. This edits the container instance directly.
+type PostCreateFunc func(context.Context, *Container) error
+
+func nopPostCreate(context.Context, *Container) error {
+	return nil
+}
+
 // Options includes Gnomock startup configuration. Functional options
 // (WithSomething) should be used instead of directly initializing objects of
 // this type whenever possible.
@@ -325,6 +345,7 @@ type Options struct {
 
 	ctx                 context.Context
 	init                InitFunc
+	postCreate          PostCreateFunc
 	healthcheck         HealthcheckFunc
 	healthcheckInterval time.Duration
 	logWriter           io.Writer
@@ -334,6 +355,7 @@ func buildConfig(opts ...Option) *Options {
 	config := &Options{
 		ctx:                 context.Background(),
 		init:                nopInit,
+		postCreate:          nopPostCreate,
 		healthcheck:         nopHealthcheck,
 		healthcheckInterval: defaultHealthcheckInterval,
 		Timeout:             defaultTimeout,

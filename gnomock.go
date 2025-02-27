@@ -133,6 +133,11 @@ func newContainer(g *g, image string, ports NamedPorts, config *Options) (c *Con
 		}
 	}()
 
+	err = g.postCreatef(ctx, c, config)
+	if err != nil {
+		return nil, fmt.Errorf("can't perform post-create setup: %w", err)
+	}
+
 	err = g.setupLogForwarding(c, cli, config)
 	if err != nil {
 		return nil, fmt.Errorf("can't setup log forwarding: %w", err)
@@ -310,6 +315,12 @@ func (g *g) wait(ctx context.Context, c *Container, config *Options) error {
 			lastErr = err
 		}
 	}
+}
+
+func (g *g) postCreatef(ctx context.Context, c *Container, config *Options) error {
+	g.log.Info("starting post-create setup")
+
+	return config.postCreate(ctx, c)
 }
 
 func (g *g) initf(ctx context.Context, c *Container, config *Options) error {
