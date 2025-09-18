@@ -118,11 +118,11 @@ RabbitMQ | [Go package](https://github.com/orlangure/gnomock/tree/master/preset/
 Kafka | [Go package](https://github.com/orlangure/gnomock/tree/master/preset/kafka) | [Reference](https://pkg.go.dev/github.com/orlangure/gnomock/preset/kafka?tab=doc) | `3.3.1-L0`,  `3.6.1-L0`                                       | ✅
 Elasticsearch | [Go package](https://github.com/orlangure/gnomock/tree/master/preset/elastic) | [Reference](https://pkg.go.dev/github.com/orlangure/gnomock/preset/elastic?tab=doc) | `8.13.0`, `7.17.21`                         | ✅
 Kubernetes | [Go package](https://github.com/orlangure/gnomock/tree/master/preset/k3s) | [Reference](https://pkg.go.dev/github.com/orlangure/gnomock/preset/k3s?tab=doc) | `v1.26.3-k3s1`                            | ✅
-CockroachDB | [Go package](https://github.com/orlangure/gnomock/tree/master/preset/cockroachdb) | [Reference](https://pkg.go.dev/github.com/orlangure/gnomock/preset/cockroachdb?tab=doc) | `v19.2.11`, `v20.1.10`, `v21.2.17`, `v22.2.19`, `v23.1.20`                    | ✅
+CockroachDB | [Go package](https://github.com/orlangure/gnomock/tree/master/preset/cockroachdb) | [Reference](https://pkg.go.dev/github.com/orlangure/gnomock/preset/cockroachdb?tab=doc) | `v23.2.25`, `v24.1.18`, `v24.3.13`, `v25.1.6`                    | ✅
 InfluxDB | [Go package](https://github.com/orlangure/gnomock/tree/master/preset/influxdb) | [Reference](https://pkg.go.dev/github.com/orlangure/gnomock/preset/influxdb?tab=doc) | `2.7.6-alpine`                            | ✅
 Cassandra | [Go package](https://github.com/orlangure/gnomock/tree/master/preset/cassandra) | [Reference](https://pkg.go.dev/github.com/orlangure/gnomock/preset/cassandra?tab=doc) | `4.0`, `3`                                | ✅
 Vault | [Go package](https://github.com/orlangure/gnomock/tree/master/preset/vault) | [Reference](https://pkg.go.dev/github.com/orlangure/gnomock/preset/vault?tab=doc) | `1.10`, `1.11`, `1.12`, `1.13`     | ✅
-Azurite | [Go package](https://github.com/orlangure/gnomock/tree/master/preset/azurite) | [Reference](https://pkg.go.dev/github.com/orlangure/gnomock/preset/azurite?tab=doc) | `3.30.0`                                  | ✅
+Azurite | [Go package](https://github.com/orlangure/gnomock/tree/master/preset/azurite) | [Reference](https://pkg.go.dev/github.com/orlangure/gnomock/preset/azurite?tab=doc) | `3.34.0`                                  | ✅
 <!-- new presets go here -->
 
 It is possible to use Gnomock [directly from Go](https://pkg.go.dev/github.com/orlangure/gnomock#StartCustom) code without any presets. HTTP API only allows to setup containers using presets that exist in this repository.

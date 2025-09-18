@@ -28,6 +28,10 @@ func TestPreset(t *testing.T) {
 
 func testPreset(version string) func(t *testing.T) {
 	return func(t *testing.T) {
+		if version == "2017-latest" && os.Getenv("CI") != "" {
+			t.Skip("2017-latest is not supported in CI")
+		}
+
 		queries := `
 			insert into t (a) values (1);
 			insert into t (a) values (2);
@@ -42,11 +46,16 @@ func testPreset(version string) func(t *testing.T) {
 			mssql.WithQueriesFile("./testdata/queries.sql"),
 		)
 
-		container, err := gnomock.Start(
-			p,
+		options := []gnomock.Option{
 			gnomock.WithLogWriter(os.Stdout),
-			gnomock.WithTimeout(time.Minute*10),
-		)
+			gnomock.WithTimeout(time.Minute * 10),
+		}
+
+		if os.Getenv("CI") != "" {
+			options = append(options, gnomock.WithUser("10001:0"))
+		}
+
+		container, err := gnomock.Start(p, options...)
 
 		defer func() { _ = gnomock.Stop(container) }()
 
@@ -58,16 +67,16 @@ func testPreset(version string) func(t *testing.T) {
 		db, err := sql.Open("sqlserver", connStr)
 		require.NoError(t, err)
 
-		var max, avg, min, count float64
+		var maximum, avg, minimum, count float64
 
 		rows := db.QueryRow("select max(a), avg(a), min(a), count(a) from t")
 
-		err = rows.Scan(&max, &avg, &min, &count)
+		err = rows.Scan(&maximum, &avg, &minimum, &count)
 		require.NoError(t, err)
 
-		require.Equal(t, float64(3), max)
+		require.Equal(t, float64(3), maximum)
 		require.Equal(t, float64(2), avg)
-		require.Equal(t, float64(1), min)
+		require.Equal(t, float64(1), minimum)
 		require.Equal(t, float64(3), count)
 		require.NoError(t, db.Close())
 	}
@@ -77,7 +86,15 @@ func TestPreset_withDefaults(t *testing.T) {
 	t.Parallel()
 
 	p := mssql.Preset(mssql.WithLicense(true))
-	container, err := gnomock.Start(p, gnomock.WithTimeout(time.Minute*10))
+	options := []gnomock.Option{
+		gnomock.WithTimeout(time.Minute * 10),
+	}
+
+	if os.Getenv("CI") != "" {
+		options = append(options, gnomock.WithUser("10001:0"))
+	}
+
+	container, err := gnomock.Start(p, options...)
 
 	defer func() { require.NoError(t, gnomock.Stop(container)) }()
 
